@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificação de Certificado</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #ede7f6);
+            text-align: center;
+            padding: 60px;
+        }
+
+        .box {
+            background: white;
+            padding: 40px;
+            max-width: 520px;
+            margin: auto;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+        }
+
+        input[type="text"] {
+            width: 85%;
+            padding: 12px;
+            margin-top: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0d47a1;
+        }
+
+        .resultado {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .valid {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .invalid {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .orientacoes {
+            text-align: left;
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .orientacoes h3 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🎓 Verificação de Certificado</h1>
+
+        <div class="orientacoes">
+            <h3>📌 Como verificar seu certificado:</h3>
+            <ul>
+                <li>O código está no rodapé do seu certificado PDF.</li>
+                <li>Digite exatamente como aparece (letras MAIÚSCULAS e números).</li>
+                <li>Exemplo: <strong>9F23A1C8</strong></li>
+            </ul>
+        </div>
+
+        <form method="POST">
+            <input type="text" name="codigo" placeholder="Digite o código do certificado" required>
+            <br>
+            <button type="submit">Verificar</button>
+        </form>
+
+        {% if resultado %}
+            <div class="resultado valid">
+                <h2>✅ Certificado Válido</h2>
+                <p><strong>Nome:</strong> {{ resultado.nome }}</p>
+                <p><strong>Nível:</strong> {{ resultado.nivel }}</p>
+                <p><strong>Data da Prova:</strong> {{ resultado.data }}</p>
+            </div>
+        {% elif resultado is not none %}
+            <div class="resultado invalid">
+                <h2>❌ Certificado não encontrado</h2>
+                <p>Verifique se o código foi digitado corretamente.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

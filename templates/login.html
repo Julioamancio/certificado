@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Your English Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #dceeff, #eae6ff);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            color: #333366;
+            margin-bottom: 20px;
+        }
+
+        .login-box p {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .login-box button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 90%;
+        }
+
+        .login-box button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>🎓 Welcome!</h1>
+        <p>Please enter your access credentials to begin your test.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="usuario" placeholder="Username" required><br>
+            <input type="password" name="senha" placeholder="Password" required><br>
+            <button type="submit">🔓 Access Test</button>
+        </form>
+    </div>
+</body>
+</html>

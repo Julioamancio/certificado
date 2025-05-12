@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Payment – {{ nivel.upper() }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>💳 Confirm your {{ nivel.upper() }} Test</h1>
+        <p>Insert your email to receive your login and password:</p>
+
+        <form method="POST">
+            <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:80%; font-size:16px;">
+            <br><br>
+            <button type="submit" class="btn-comprar">📩 Confirm & Receive Access</button>
+        </form>
+    </div>
+</body>
+</html>

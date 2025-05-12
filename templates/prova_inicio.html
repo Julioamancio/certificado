@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English Test – Level {{ nivel }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f6f8fb;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .secao {
+            margin-top: 30px;
+        }
+
+        .secao-titulo {
+            background-color: #007BFF;
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            margin-top: 40px;
+        }
+
+        .questao {
+            margin-top: 20px;
+        }
+
+        .questao h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .alternativas label {
+            display: block;
+            background: #eaf2ff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .alternativas input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .alternativas label:hover {
+            background: #d6e7ff;
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        audio::-internal-media-controls-download-button {
+            display: none;
+        }
+
+        audio::-webkit-media-controls-enclosure {
+            overflow: hidden;
+        }
+
+        button {
+            margin-top: 30px;
+            display: block;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 14px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+
+    <script>
+        const totalQuestoes = Number("{{ questoes|length }}");
+
+        function verificarRespostas() {
+            for (let i = 1; i <= totalQuestoes; i++) {
+                if (!document.querySelector('input[name="q' + i + '"]:checked')) {
+                    alert("⛔ Please answer all questions before submitting the test.");
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <form method="POST" action="{{ url_for('prova.finalizar_prova', nivel=nivel.lower()) }}" onsubmit="return verificarRespostas();">
+        <div class="container">
+            <h1>📝 English Test – Level {{ nivel.upper() }}</h1>
+
+            <div class="form-header">
+                <input type="text" name="nome" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="E-mail" required>
+            </div>
+
+            {% set secao_atual = '' %}
+            {% for q in questoes %}
+                {% if q.tipo != secao_atual %}
+                    {% if not loop.first %}</div>{% endif %}
+                    <div class="secao">
+                        <div class="secao-titulo">{{ q.tipo|capitalize }}</div>
+                    {% set secao_atual = q.tipo %}
+                {% endif %}
+
+                <div class="questao">
+                    <h3>Q{{ loop.index }}. {{ q.enunciado|safe }}</h3>
+
+                    {% if q.tipo == 'listening' and q.audio %}
+                        <audio controls controlsList="nodownload">
+                            <source src="{{ q.audio }}" type="audio/mpeg">
+                            Your browser does not support audio playback.
+                        </audio>
+                    {% endif %}
+
+                    <div class="alternativas">
+                        <label><input type="radio" name="q{{ loop.index }}" value="A"> A) {{ q.alternativas.A }}</label>
+                        <label><input type="radio" name="q{{ loop.index }}" value="B"> B) {{ q.alternativas.B }}</label>
+                        <label><input type="radio" name="q{{ loop.index }}" value="C"> C) {{ q.alternativas.C }}</label>
+                        <label><input type="radio" name="q{{ loop.index }}" value="D"> D) {{ q.alternativas.D }}</label>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+            <button type="submit">✅ Finish Test</button>
+        </div>
+    </form>
+</body>
+</html>

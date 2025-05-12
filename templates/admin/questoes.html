@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Lista de Questões</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            padding: 40px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #e0e0e0;
+        }
+        a.btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            color: white;
+        }
+        .btn-edit {
+            background-color: #2196F3;
+        }
+        .btn-delete {
+            background-color: #f44336;
+        }
+        .btn-new {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 Questões Cadastradas</h1>
+    <a href="/admin/questoes/nova" class="btn-new">➕ Nova Questão</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nível</th>
+                <th>Tipo</th>
+                <th>Enunciado</th>
+                <th>Áudio</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for q in questoes %}
+            <tr>
+                <td>{{ q.id }}</td>
+                <td>{{ q.nivel.upper() }}</td>
+                <td>{{ q.tipo.replace('_', ' ').title() }}</td>
+                <td>{{ q.enunciado[:60] }}...</td>
+                <td>{% if q.tipo == 'listening' %}<a href="{{ q.audio }}" target="_blank">🎧 Ouvir</a>{% else %}-{% endif %}</td>
+                <td>
+                    <a href="/admin/questoes/editar/{{ q.id }}" class="btn btn-edit">✏️ Editar</a>
+                    <a href="/admin/questoes/deletar/{{ q.id }}" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">🗑️ Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

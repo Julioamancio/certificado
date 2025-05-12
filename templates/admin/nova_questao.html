@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if questao %}Editar Questão{% else %}Nova Questão{% endif %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- TinyMCE API -->
+    <script src="https://cdn.tiny.cloud/1/xew4b0q0sgfpje8cr43zzu6m2h7jsjm0vezet5xs2exuy781/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+      tinymce.init({
+        selector: '#enunciado',
+        height: 300,
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        menubar: false
+      });
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #eef2ff, #f3e8ff);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .form-container {
+            max-width: 850px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 30px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        function toggleAudioField() {
+            const tipo = document.getElementById('tipo').value;
+            const audioDiv = document.getElementById('audio_field');
+            audioDiv.style.display = tipo === 'listening' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body onload="toggleAudioField()">
+    <div class="form-container">
+        <h1>{% if questao %}✏️ Editar Questão{% else %}➕ Nova Questão{% endif %}</h1>
+        <form method="POST">
+            <label for="nivel">Nível:</label>
+            <select name="nivel" required>
+                <option value="b2" {% if questao and questao.nivel == 'b2' %}selected{% endif %}>B2</option>
+                <option value="c1" {% if questao and questao.nivel == 'c1' %}selected{% endif %}>C1</option>
+            </select>
+
+            <label for="tipo">Tipo:</label>
+            <select name="tipo" id="tipo" onchange="toggleAudioField()" required>
+                <option value="reading" {% if questao and questao.tipo == 'reading' %}selected{% endif %}>Reading</option>
+                <option value="grammar" {% if questao and questao.tipo == 'grammar' %}selected{% endif %}>Grammar</option>
+                <option value="use_of_english" {% if questao and questao.tipo == 'use_of_english' %}selected{% endif %}>Use of English</option>
+                <option value="listening" {% if questao and questao.tipo == 'listening' %}selected{% endif %}>Listening</option>
+            </select>
+
+            <div id="audio_field" style="display: none;">
+                <label for="audio">Link do Áudio:</label>
+                <input type="text" name="audio" value="{{ questao.audio if questao else '' }}" placeholder="https://..." />
+                {% if questao and questao.audio %}
+                <audio controls style="margin-top:10px;" controlsList="nodownload">
+                    <source src="{{ questao.audio }}" type="audio/mpeg">
+                </audio>
+                {% endif %}
+            </div>
+
+            <label for="enunciado">Enunciado:</label>
+            <textarea id="enunciado" name="enunciado">{{ questao.enunciado|safe if questao else '' }}</textarea>
+
+            <label>Alternativas:</label>
+            <input type="text" name="A" value="{{ questao.alternativas.A if questao else '' }}" required>
+            <input type="text" name="B" value="{{ questao.alternativas.B if questao else '' }}" required>
+            <input type="text" name="C" value="{{ questao.alternativas.C if questao else '' }}" required>
+            <input type="text" name="D" value="{{ questao.alternativas.D if questao else '' }}" required>
+
+            <label>Resposta Correta:</label>
+            <div class="radio-group">
+                {% for alt in ['A', 'B', 'C', 'D'] %}
+                    <label><input type="radio" name="resposta" value="{{ alt }}" {% if questao and questao.resposta == alt %}checked{% endif %}> {{ alt }}</label>
+                {% endfor %}
+            </div>
+
+            <button type="submit">{% if questao %}💾 Atualizar{% else %}💾 Salvar{% endif %}</button>
+        </form>
+    </div>
+</body>
+</html>

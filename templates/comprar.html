@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy Your Test – English Proficiency Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Choose Your English Test</h1>
+        <p>Select your level and begin your journey to certification!</p>
+
+        <!-- Teste B2 -->
+        <div class="card">
+            <h2>🇬🇧 B2 – Intermediate Upper</h2>
+            <ul>
+                <li>Reading</li>
+                <li>Grammar</li>
+                <li>Use of English</li>
+                <li>Listening</li>
+                <li>PDF Certificate issued upon completion</li>
+            </ul>
+            <p><strong>Price:</strong> R$ 49,90</p>
+            <form action="/create-checkout-session/b2" method="POST">
+                <input type="email" name="email" placeholder="Enter your email" required
+                       style="padding:10px; width:80%; font-size:16px;">
+                <br><br>
+                <button type="submit" class="btn-comprar">💳 Buy B2 Test</button>
+            </form>
+        </div>
+
+        <!-- Teste C1 -->
+        <div class="card">
+            <h2>🇬🇧 C1 – Advanced</h2>
+            <ul>
+                <li>Reading</li>
+                <li>Grammar</li>
+                <li>Use of English</li>
+                <li>Listening</li>
+                <li>PDF Certificate issued upon completion</li>
+            </ul>
+            <p><strong>Price:</strong> R$ 99,90</p>
+            <form action="/create-checkout-session/c1" method="POST">
+                <input type="email" name="email" placeholder="Enter your email" required
+                       style="padding:10px; width:80%; font-size:16px;">
+                <br><br>
+                <button type="submit" class="btn-comprar">💳 Buy C1 Test</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
