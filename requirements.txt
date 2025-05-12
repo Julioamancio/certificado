@@ -1,6 +1,5 @@
 Flask
 fpdf
-smtplib
 email
 uuid
 beautifulsoup4
