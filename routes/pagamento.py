@@ -16,7 +16,7 @@ stripe.api_key = 'sk_live_51RJlFXFm2kA3my7dcKq8zPbPsGD61qsiZb6pKNiAJKfKxk70ywSfx
 # ✅ IDs DE PREÇOS REAIS DO STRIPE
 PRECOS_STRIPE = {
     # 'Teste': 'price_1RN1kHFm2kA3my7dX4xf8fvi',  # Comentado se quiser usar depois
-    'b2': 'price_1RN1kHFm2kA3my7dX4xf8fvi',
+    'b2': 'price_1RN1K4Fm2kA3my7dSC9LgTET',
     'c1': 'price_1RN1InFm2kA3my7d6NboZjce'
 }
 
