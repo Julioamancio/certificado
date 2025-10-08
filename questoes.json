@@ -394,7 +394,7 @@
     {
         "id": "46f0726e",
         "nivel": "b2",
-        "tipo": "reading",
+        "tipo": "listening",
         "enunciado": "<p><strong>QUESTION 8 - </strong>You overhear a student phoning her parents.</p>\r\n<p>What is her opinion of the place she is living in while at college?</p>",
         "audio": "",
         "alternativas": {
@@ -404,5 +404,19 @@
             "D": "-"
         },
         "resposta": "A"
+    },
+    {
+        "id": "4ab38299",
+        "nivel": "c1",
+        "tipo": "reading",
+        "enunciado": "<p>dasdsa</p>",
+        "audio": "",
+        "alternativas": {
+            "A": "q",
+            "B": "q",
+            "C": "q",
+            "D": "q"
+        },
+        "resposta": "D"
     }
 ]

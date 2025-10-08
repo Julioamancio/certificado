@@ -1,52 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Buy Your Test – English Proficiency Test</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Comprar Teste – Certificados B2 e C1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg1: #0f172a; --bg2: #1e293b; --brand: #0ea5e9; --accent: #14b8a6; --text: #e2e8f0; --muted: #94a3b8;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; color: var(--text); background: radial-gradient(900px 450px at 10% 10%, #0b213f 0%, var(--bg1) 40%), radial-gradient(800px 400px at 90% 10%, #0b3f3b 0%, var(--bg2) 40%); }
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .nav a { color: var(--text); text-decoration: none; margin-left: 16px; opacity: 0.9; }
+        .nav a:hover { opacity: 1; }
+        .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; max-width: 1100px; margin: 40px auto 14px; padding: 0 28px; }
+        .hero h1 { font-size: 36px; margin: 0 0 10px; }
+        .hero p { color: var(--muted); margin: 0 0 16px; }
+        .mock { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+        .mock img { width: 100%; display: block; }
+        .section { max-width: 1100px; margin: 10px auto 30px; padding: 0 28px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 18px; }
+        .card h2 { margin: 0 0 6px; }
+        .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); margin-bottom: 10px; }
+        .price { font-weight: 600; margin: 8px 0 14px; }
+        .list { color: var(--text); margin: 8px 0 14px; }
+        .list li { margin: 6px 0; }
+        .field { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+        input[type="email"] { padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); color: var(--text); }
+        .btn { padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: linear-gradient(135deg, var(--brand), #3b82f6); color: #fff; }
+        .note { color: var(--muted); font-size: 13px; margin-top: 8px; }
+        .footer { text-align: center; color: var(--muted); padding: 24px; margin-top: 20px; }
+        @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎓 Choose Your English Test</h1>
-        <p>Select your level and begin your journey to certification!</p>
-
-        <!-- Teste B2 -->
-        <div class="card">
-            <h2>🇬🇧 B2 – Intermediate Upper</h2>
-            <ul>
-                <li>Reading</li>
-                <li>Grammar</li>
-                <li>Use of English</li>
-                <li>Listening</li>
-                <li>PDF Certificate issued upon completion</li>
-            </ul>
-            <p><strong>Price:</strong> R$ 49,90</p>
-            <form action="/create-checkout-session/b2" method="POST">
-                <input type="email" name="email" placeholder="Enter your email" required
-                       style="padding:10px; width:80%; font-size:16px;">
-                <br><br>
-                <button type="submit" class="btn-comprar">💳 Buy B2 Test</button>
-            </form>
-        </div>
-
-        <!-- Teste C1 -->
-        <div class="card">
-            <h2>🇬🇧 C1 – Advanced</h2>
-            <ul>
-                <li>Reading</li>
-                <li>Grammar</li>
-                <li>Use of English</li>
-                <li>Listening</li>
-                <li>PDF Certificate issued upon completion</li>
-            </ul>
-            <p><strong>Price:</strong> R$ 99,90</p>
-            <form action="/create-checkout-session/c1" method="POST">
-                <input type="email" name="email" placeholder="Enter your email" required
-                       style="padding:10px; width:80%; font-size:16px;">
-                <br><br>
-                <button type="submit" class="btn-comprar">💳 Buy C1 Test</button>
-            </form>
+    <div class="nav">
+        <div>
+            <a href="/">Início</a>
+            <a href="{{ url_for('verificar.verificar') }}">Verificar Certificado</a>
+            <a href="{{ url_for('admin.login') }}">Admin</a>
         </div>
     </div>
+
+    <section class="hero">
+        <div>
+            <h1>Escolha seu Teste de Inglês: B2 ou C1</h1>
+            <p>Pagamento seguro via Stripe. Após a compra, você recebe por e-mail suas credenciais para realizar o teste e, ao concluir, o certificado em PDF com seu nível.</p>
+        </div>
+        <div class="mock">
+            <img src="{{ url_for('static', filename='img/certificado_modelo.png') }}" alt="Modelo de Certificado">
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="grid">
+            <!-- Card B2 -->
+            <div class="card">
+                <span class="badge">🇬🇧 B2 • Intermediário-Avançado</span>
+                <h2>Certificado B2</h2>
+                <div class="price">R$ 49,90</div>
+                <ul class="list">
+                    <li>Leitura, Gramática, Use of English e Listening</li>
+                    <li>Ideal para ambientes acadêmicos e profissionais</li>
+                    <li>Certificado em PDF ao finalizar</li>
+                </ul>
+                <form action="/create-checkout-session/b2" method="POST">
+                    <div class="field">
+                        <input type="email" name="email" placeholder="Seu e-mail" required>
+                        <button class="btn btn-primary" type="submit">Comprar B2</button>
+                    </div>
+                </form>
+                <div class="note">Usaremos seu e-mail para enviar credenciais e o certificado.</div>
+            </div>
+
+            <!-- Card C1 -->
+            <div class="card">
+                <span class="badge">🇬🇧 C1 • Avançado</span>
+                <h2>Certificado C1</h2>
+                <div class="price">R$ 99,90</div>
+                <ul class="list">
+                    <li>Leitura, Gramática, Use of English e Listening</li>
+                    <li>Fluência em contextos formais e técnicos</li>
+                    <li>Certificado em PDF ao finalizar</li>
+                </ul>
+                <form action="/create-checkout-session/c1" method="POST">
+                    <div class="field">
+                        <input type="email" name="email" placeholder="Seu e-mail" required>
+                        <button class="btn btn-primary" type="submit">Comprar C1</button>
+                    </div>
+                </form>
+                <div class="note">Usaremos seu e-mail para enviar credenciais e o certificado.</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer">Pagamento processado por Stripe • Certificados B2 e C1</div>
 </body>
 </html>

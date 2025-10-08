@@ -1,72 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Login Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: #f0f2f5;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-        label {
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .erro {
-            color: red;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        :root { --bg1:#0f172a; --bg2:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --brand:#0ea5e9; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family:'Poppins',sans-serif; color:var(--text); background: radial-gradient(900px 450px at 10% 10%, #0b213f 0%, var(--bg1) 40%), radial-gradient(800px 400px at 90% 10%, #0b3f3b 0%, var(--bg2) 40%); min-height: 100vh; display:flex; align-items:center; justify-content:center; }
+        .wrapper { width:100%; max-width: 420px; padding: 24px; }
+        .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+        .brand { display:flex; align-items:center; gap:12px; margin-bottom: 12px; opacity:0.95; }
+        .brand img { width:36px; height:36px; border-radius:8px; object-fit:cover; }
+        h2 { margin: 6px 0 4px; font-size: 22px; }
+        p.sub { margin:0 0 14px; color: var(--muted); font-size: 13px; }
+        label { font-weight: 600; font-size: 13px; }
+        .field { margin: 10px 0 14px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); color: var(--text); }
+        .btn { width: 100%; padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; background: linear-gradient(135deg, var(--brand), #3b82f6); color: #fff; }
+        .erro { color: #fca5a5; text-align: center; margin-bottom: 10px; font-size: 13px; }
+        .links { display:flex; justify-content: space-between; margin-top: 10px; }
+        .links a { color: var(--muted); text-decoration: none; font-size: 12px; }
+        .footer { text-align:center; color: var(--muted); font-size: 12px; margin-top: 18px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>🔐 Admin Login</h2>
-        {% if erro %}
-            <div class="erro">Usuário ou senha incorretos.</div>
-        {% endif %}
-        <form method="POST">
-            <label>Usuário:</label>
-            <input type="text" name="usuario" required>
-            <label>Senha:</label>
-            <input type="password" name="senha" required>
-            <button type="submit">Entrar</button>
-        </form>
+    <div class="wrapper">
+        <div class="card">
+            <div class="brand">
+                <img src="https://static.wixstatic.com/media/3f497e_17ecdccdd2ee436e91ba24ac31b73578~mv2.png/v1/crop/x_0,y_184,w_1563,h_1178/fill/w_129,h_96,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Blue%20and%20White%20Circle%20Surfing%20Club%20Logo.png" alt="Logo" />
+                <div>
+                    <strong>English Proficiency – Admin</strong>
+                    <p class="sub">Acesse o painel para gerenciar questões e certificados.</p>
+                </div>
+            </div>
+            <h2>🔐 Login</h2>
+            {% if erro %}
+                <div class="erro">Usuário ou senha incorretos.</div>
+            {% endif %}
+            <form method="POST">
+                <div class="field">
+                    <label for="usuario">Usuário</label>
+                    <input id="usuario" type="text" name="usuario" required>
+                </div>
+                <div class="field">
+                    <label for="senha">Senha</label>
+                    <input id="senha" type="password" name="senha" required>
+                </div>
+                <button class="btn" type="submit">Entrar</button>
+            </form>
+            <div class="links">
+                <a href="/">Voltar ao início</a>
+                <a href="{{ url_for('verificar.verificar') }}">Verificar Certificado</a>
+            </div>
+        </div>
+        <div class="footer">© {{ 2025 }} English Proficiency • Admin</div>
     </div>
 </body>
 </html>

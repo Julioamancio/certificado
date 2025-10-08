@@ -1,109 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>English Proficiency Test</title>
+    <title>Certificados de Inglês B2 e C1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg1: #0f172a;
+            --bg2: #1e293b;
+            --brand: #0ea5e9;
+            --accent: #14b8a6;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+        }
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #fce4ec);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            color: var(--text);
+            background: radial-gradient(1000px 500px at 10% 10%, #0b213f 0%, var(--bg1) 40%),
+                        radial-gradient(800px 400px at 90% 10%, #0b3f3b 0%, var(--bg2) 40%);
+            min-height: 100vh;
         }
-
-        .container {
-            background: #ffffff;
-            padding: 50px 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
+        .nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 28px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08);
         }
-
-        .logo {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 25px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        .nav .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+        .nav img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .nav a { color: var(--text); text-decoration: none; margin-left: 16px; opacity: 0.9; }
+        .nav a:hover { opacity: 1; }
+        .hero {
+            display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 30px; align-items: center;
+            max-width: 1100px; margin: 60px auto 30px; padding: 0 28px;
         }
-
-        h1 {
-            font-size: 26px;
-            margin-bottom: 10px;
-            color: #333;
+        .hero h1 { font-size: 40px; line-height: 1.15; margin: 0 0 14px; }
+        .hero p { color: var(--muted); font-size: 18px; margin: 0 0 22px; }
+        .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+        .btn-primary { background: linear-gradient(135deg, var(--brand), #3b82f6); color: #fff; }
+        .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.12); }
+        .mock {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
         }
-
-        p {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
+        .mock img { width: 100%; display: block; }
+        .section { max-width: 1100px; margin: 20px auto; padding: 0 28px; }
+        .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 18px; }
+        .card {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px; padding: 18px;
         }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            background-color: #1976d2;
-            text-decoration: none;
-            border-radius: 8px;
-            margin: 8px;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #125ea9;
-        }
-
-        .admin-btn {
-            background-color: #6a1b9a;
-        }
-
-        .admin-btn:hover {
-            background-color: #4a148c;
-        }
-
-        .cert-btn {
-            background-color: #2e7d32;
-        }
-
-        .cert-btn:hover {
-            background-color: #1b5e20;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            .btn {
-                width: 100%;
-                margin: 10px 0;
-            }
-        }
+        .card h3 { margin: 0 0 8px; }
+        .card p { margin: 0 0 10px; color: var(--muted); }
+        .list { margin: 10px 0 0; color: var(--text); }
+        .list li { margin: 6px 0; }
+        .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
+        .step { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 16px; }
+        .footer { text-align: center; color: var(--muted); padding: 24px; margin-top: 30px; }
+        @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr 1fr; } .cards { grid-template-columns: 1fr; } }
     </style>
+    
 </head>
 <body>
-    <div class="container">
-        <img class="logo" src="https://static.wixstatic.com/media/3f497e_17ecdccdd2ee436e91ba24ac31b73578~mv2.png/v1/crop/x_0,y_184,w_1563,h_1178/fill/w_129,h_96,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Blue%20and%20White%20Circle%20Surfing%20Club%20Logo.png" alt="Logo">
-        <h1>Welcome to the English Proficiency Test</h1>
-        <p>Evaluate your English level and receive a certified result!</p>
-        <a href="/comprar" class="btn">📝 Buy Your Test</a>
-        <a href="{{ url_for('admin.login') }}" class="btn admin-btn">🔐 Admin Panel</a>
-        <a href="{{ url_for('verificar.verificar') }}" class="btn cert-btn">🎓 Verify Certificate</a>
+    <div class="nav">
+        <div class="brand">
+            <img src="https://static.wixstatic.com/media/3f497e_17ecdccdd2ee436e91ba24ac31b73578~mv2.png/v1/crop/x_0,y_184,w_1563,h_1178/fill/w_129,h_96,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Blue%20and%20White%20Circle%20Surfing%20Club%20Logo.png" alt="Logo" />
+            <span>English Proficiency Certificates</span>
+        </div>
+        <div>
+            <a href="/comprar">Comprar</a>
+            <a href="{{ url_for('verificar.verificar') }}">Verificar Certificado</a>
+            <a href="{{ url_for('admin.login') }}">Admin</a>
+        </div>
     </div>
+
+    <section class="hero">
+        <div>
+            <h1>Obtenha seu Certificado de Inglês B2 ou C1</h1>
+            <p>Valide sua proficiência com um certificado digital em PDF, pronto para enviar para universidades, empresas e plataformas profissionais. Teste completo com leitura, gramática, uso do inglês e listening.</p>
+            <div class="cta">
+                <a class="btn btn-primary" href="/comprar">🛒 Comprar Teste</a>
+                <a class="btn btn-secondary" href="{{ url_for('verificar.verificar') }}">🎓 Verificar Certificado</a>
+            </div>
+        </div>
+        <div class="mock">
+            <img src="{{ url_for('static', filename='img/certificado_modelo.png') }}" alt="Modelo de Certificado">
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="cards">
+            <div class="card">
+                <h3>Certificado B2</h3>
+                <p>Nível Intermediário-Avançado. Mostra que você consegue se comunicar de forma clara em ambientes acadêmicos e profissionais.</p>
+                <ul class="list">
+                    <li>Comunicação eficaz em situações do dia a dia</li>
+                    <li>Leitura e interpretação de textos complexos</li>
+                    <li>Boa base gramatical e vocabulário extenso</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Certificado C1</h3>
+                <p>Nível Avançado. Demonstra domínio sólido do idioma, ideal para estudos internacionais e posições que exigem inglês profissional.</p>
+                <ul class="list">
+                    <li>Fluência em contextos formais e técnicos</li>
+                    <li>Compreensão auditiva de alto nível</li>
+                    <li>Produção textual clara e precisa</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h3>Como funciona</h3>
+        <div class="steps">
+            <div class="step"><strong>1. Comprar</strong><br><span>Finalize o pagamento com segurança.</span></div>
+            <div class="step"><strong>2. Credenciais</strong><br><span>Receba acesso por e-mail.</span></div>
+            <div class="step"><strong>3. Realizar Teste</strong><br><span>Responda as questões por nível.</span></div>
+            <div class="step"><strong>4. Certificado</strong><br><span>Receba seu PDF por e-mail.</span></div>
+        </div>
+    </section>
+
+    <div class="footer">© {{ 2025 }} English Proficiency • Certificados B2 e C1</div>
 </body>
 </html>
