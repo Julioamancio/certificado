@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin – Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg1:#0f172a; --bg2:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --brand:#0ea5e9; --accent:#14b8a6; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family:'Poppins',sans-serif; color:var(--text); background: radial-gradient(900px 450px at 10% 10%, #0b213f 0%, var(--bg1) 40%), radial-gradient(800px 400px at 90% 10%, #0b3f3b 0%, var(--bg2) 40%); }
+        .nav { display:flex; align-items:center; gap:12px; padding: 16px 24px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .nav a { color: var(--text); text-decoration: none; padding: 6px 10px; border-radius: 6px; opacity:0.9; }
+        .nav a:hover { background: rgba(255,255,255,0.12); opacity:1; }
+        .container { max-width: 1100px; margin: 22px auto; padding: 0 24px; }
+        .hero { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom: 14px; }
+        .hero .title { font-size: 28px; font-weight:600; }
+        .hero .subtitle { color: var(--muted); font-size: 14px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 16px; }
+        .card h3 { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+        .card .value { font-size: 26px; font-weight: 600; color: #fff; }
+        .split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+        .panel { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 16px; }
+        .panel h2 { margin: 0 0 10px; font-size: 16px; color: var(--text); }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.12); display: flex; justify-content: space-between; color: var(--text); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border-bottom: 1px solid rgba(255,255,255,0.12); padding: 10px; text-align: left; }
+        th { color: var(--muted); }
+        .empty { color: var(--muted); font-size: 14px; }
+        .brand { display:flex; align-items:center; gap:10px; }
+        .brand img { width:36px; height:36px; border-radius:8px; object-fit:cover; }
+        @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <strong>Admin</strong>
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.listar_questoes') }}">Questões</a>
+        <a href="{{ url_for('admin.nova_questao') }}">Nova Questão</a>
+        <a href="{{ url_for('admin.logout') }}">Sair</a>
+    </div>
+    <div class="container">
+        <div class="hero">
+            <div>
+                <div class="title">📊 Dashboard</div>
+                <div class="subtitle">Visão geral de questões, usuários e certificados.</div>
+            </div>
+            <div class="brand">
+                <span>English Proficiency</span>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total de Questões</h3>
+                <div class="value">{{ total_questoes }}</div>
+            </div>
+            <div class="card">
+                <h3>Total de Certificados Emitidos</h3>
+                <div class="value">{{ total_certificados }}</div>
+            </div>
+            <div class="card">
+                <h3>Usuários Cadastrados</h3>
+                <div class="value">{{ total_usuarios }}</div>
+            </div>
+            <div class="card">
+                <h3>Usuários com Acesso Válido</h3>
+                <div class="value">{{ usuarios_validos }}</div>
+            </div>
+        </div>
+
+        <div class="split">
+            <div class="panel">
+                <h2>Questões por Nível</h2>
+                {% if por_nivel %}
+                    <ul>
+                    {% for nivel, qtde in por_nivel.items() %}
+                        <li><span>{{ nivel }}</span><span>{{ qtde }}</span></li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty">Nenhum dado disponível.</div>
+                {% endif %}
+            </div>
+            <div class="panel">
+                <h2>Questões por Tipo</h2>
+                {% if por_tipo %}
+                    <ul>
+                    {% for tipo, qtde in por_tipo.items() %}
+                        <li><span>{{ tipo|capitalize }}</span><span>{{ qtde }}</span></li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty">Nenhum dado disponível.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top: 16px;">
+            <h2>Últimos Certificados</h2>
+            {% if certificados_recentes %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Nível</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in certificados_recentes %}
+                    <tr>
+                        <td>{{ c.codigo }}</td>
+                        <td>{{ c.nome }}</td>
+                        <td>{{ c.nivel }}</td>
+                        <td>{{ c.data }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <div class="empty">Nenhum certificado encontrado.</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

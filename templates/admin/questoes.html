@@ -4,84 +4,211 @@
     <meta charset="UTF-8">
     <title>Admin – Lista de Questões</title>
     <style>
+        :root {
+            --bg: #0e1326;
+            --panel: #121a2f;
+            --panel-2: #10182b;
+            --text: #e2e8f0;
+            --muted: #9aa4b0;
+            --border: #24304f;
+            --accent: #3b82f6;
+            --accent-2: #22c55e;
+            --danger: #ef4444;
+            --hover: #223058;
+        }
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f7fa;
-            padding: 40px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 32px;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #e0e0e0;
-        }
-        a.btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
-            color: white;
-        }
-        .btn-edit {
-            background-color: #2196F3;
-        }
-        .btn-delete {
-            background-color: #f44336;
-        }
-        .btn-new {
-            display: inline-block;
-            margin-top: 20px;
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-        }
+        .nav { background: #0b1220; color: var(--text); padding: 12px 20px; display: flex; gap: 12px; align-items: center; border-radius: 10px; }
+        .nav a { color: var(--text); text-decoration: none; padding: 6px 10px; border-radius: 6px; }
+        .nav a:hover { background: var(--hover); }
+        h1 { text-align: center; color: var(--text); margin-top: 18px; }
+        .btn-new { display: inline-block; margin-top: 20px; background-color: var(--accent-2); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; }
+
+        /* Tabs e filtros */
+        .tabs { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+        .tab { background: var(--panel); padding: 8px 14px; border-radius: 10px; cursor: pointer; border: 1px solid var(--border); }
+        .tab.active { background: var(--accent); color: #fff; border-color: transparent; }
+        .filters { margin-top: 14px; display: flex; gap: 10px; align-items: center; background: var(--panel); padding: 12px; border-radius: 10px; border: 1px solid var(--border); }
+        .filters input, .filters select { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); padding: 8px 10px; border-radius: 8px; }
+        .filters button { background: var(--hover); color: var(--text); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+        .filters button:hover { background: var(--accent); }
+
+        /* Tipos e tabela */
+        .nivel-section { display: none; margin-top: 16px; }
+        .nivel-section.active { display: block; }
+        .tipo-block { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+        .tipo-title { display: flex; justify-content: space-between; align-items: center; width: 100%; text-align: left; background: transparent; color: var(--text); padding: 12px 14px; border: none; cursor: pointer; font-weight: 600; }
+        .tipo-title .count { color: var(--muted); font-weight: 500; }
+        .tipo-block.collapsed .tipo-content { display: none; }
+        .tipo-content { padding: 0 12px 12px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; background: var(--panel-2); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+        th { background-color: #172043; color: var(--text); }
+        td { color: var(--text); }
+
+        a.btn { padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 14px; color: white; }
+        .btn-edit { background-color: var(--accent); }
+        .btn-delete { background-color: var(--danger); }
+
+        .audio-link { margin-left: 6px; color: var(--muted); }
     </style>
 </head>
 <body>
+    <div class="nav">
+        <strong>Admin</strong>
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.listar_questoes') }}">Questões</a>
+        <a href="{{ url_for('admin.nova_questao') }}">Nova Questão</a>
+        <a href="{{ url_for('admin.logout') }}">Sair</a>
+    </div>
     <h1>📚 Questões Cadastradas</h1>
     <a href="/admin/questoes/nova" class="btn-new">➕ Nova Questão</a>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nível</th>
-                <th>Tipo</th>
-                <th>Enunciado</th>
-                <th>Áudio</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for q in questoes %}
-            <tr>
-                <td>{{ q.id }}</td>
-                <td>{{ q.nivel.upper() }}</td>
-                <td>{{ q.tipo.replace('_', ' ').title() }}</td>
-                <td>{{ q.enunciado[:60] }}...</td>
-                <td>{% if q.tipo == 'listening' %}<a href="{{ q.audio }}" target="_blank">🎧 Ouvir</a>{% else %}-{% endif %}</td>
-                <td>
-                    <a href="/admin/questoes/editar/{{ q.id }}" class="btn btn-edit">✏️ Editar</a>
-                    <a href="/admin/questoes/deletar/{{ q.id }}" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">🗑️ Excluir</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+    <div class="tabs">
+        {% set niveis = grupos.keys()|list %}
+        {% for nivel in niveis %}
+        <div class="tab" data-target="nivel-{{ nivel }}">{{ nivel }} ({{ grupos[nivel]|map('length')|sum }})</div>
+        {% endfor %}
+    </div>
+
+    <div class="filters" id="filters">
+        <input type="text" id="filterText" placeholder="Buscar enunciado..." />
+        <select id="filterTipo">
+            <option value="todos">Todos os tipos</option>
+        </select>
+        <button type="button" id="clearFilters">Limpar</button>
+    </div>
+
+    {% for nivel, por_tipo in grupos.items() %}
+    <div class="nivel-section" id="nivel-{{ nivel }}">
+        {% for tipo, lista in por_tipo.items() %}
+        <div class="tipo-block" data-tipo="{{ tipo }}">
+            <button class="tipo-title" type="button">
+                <span>{{ tipo.replace('_',' ')|title }}</span>
+                <span class="count">{{ lista|length }}</span>
+            </button>
+            <div class="tipo-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Enunciado</th>
+                            <th>Áudio</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for q in lista %}
+                        <tr data-tipo="{{ q.tipo }}" data-enunciado="{{ q.enunciado|lower }}">
+                            <td>{{ q.id }}</td>
+                            <td>{{ q.enunciado[:100] }}...</td>
+                            <td>
+                                {% if q.tipo == 'listening' %}
+                                    {% if q.audio %}
+                                        <audio controls preload="none" src="{{ q.audio }}" style="width:220px"></audio>
+                                        <a href="{{ q.audio }}" target="_blank" class="audio-link" title="Abrir link">🔗</a>
+                                    {% else %}
+                                        <span style="color: var(--muted)">🎧 Sem áudio</span>
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/admin/questoes/editar/{{ q.id }}" class="btn btn-edit">✏️ Editar</a>
+                                <a href="/admin/questoes/deletar/{{ q.id }}" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">🗑️ Excluir</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('.nivel-section');
+        const filterText = document.getElementById('filterText');
+        const filterTipo = document.getElementById('filterTipo');
+        const clearFilters = document.getElementById('clearFilters');
+
+        function populateTiposFor(section) {
+            const tipos = new Set();
+            section.querySelectorAll('.tipo-block').forEach(b => tipos.add(b.dataset.tipo));
+            filterTipo.innerHTML = '<option value="todos">Todos os tipos</option>';
+            [...tipos].sort().forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t.replace('_',' ').replace(/\b\w/g, c => c.toUpperCase());
+                filterTipo.appendChild(opt);
+            });
+        }
+
+        function applyFilters() {
+            const active = document.querySelector('.nivel-section.active');
+            if (!active) return;
+            const texto = filterText.value.trim().toLowerCase();
+            const tipo = filterTipo.value;
+            active.querySelectorAll('.tipo-block').forEach(block => {
+                const blockTipo = block.dataset.tipo;
+                // Show/hide block by tipo filter
+                const tipoAllowed = (tipo === 'todos' || tipo === blockTipo);
+                // Row filtering by text
+                let visibleRows = 0;
+                block.querySelectorAll('tbody tr').forEach(row => {
+                    const content = row.dataset.enunciado || '';
+                    const matchText = !texto || content.includes(texto);
+                    const matchTipo = (tipo === 'todos' || row.dataset.tipo === tipo);
+                    const show = matchText && matchTipo;
+                    row.style.display = show ? '' : 'none';
+                    if (show) visibleRows++;
+                });
+                // Collapse block if no rows visible or tipo not allowed
+                block.style.display = (tipoAllowed && visibleRows > 0) ? '' : 'none';
+            });
+        }
+
+        function activate(levelId) {
+            tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-target') === levelId));
+            sections.forEach(s => s.classList.toggle('active', s.id === levelId));
+            const active = document.getElementById(levelId);
+            if (active) {
+                populateTiposFor(active);
+                applyFilters();
+            }
+        }
+
+        // Init tabs
+        if (tabs.length) {
+            const first = tabs[0].getAttribute('data-target');
+            activate(first);
+            tabs.forEach(t => t.addEventListener('click', () => activate(t.getAttribute('data-target'))));
+        }
+
+        // Filters
+        filterText.addEventListener('input', applyFilters);
+        filterTipo.addEventListener('change', applyFilters);
+        clearFilters.addEventListener('click', () => {
+            filterText.value = '';
+            filterTipo.value = 'todos';
+            applyFilters();
+        });
+
+        // Collapsible tipo blocks
+        document.querySelectorAll('.tipo-title').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const block = btn.closest('.tipo-block');
+                block.classList.toggle('collapsed');
+            });
+        });
+    </script>
 </body>
 </html>

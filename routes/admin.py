@@ -3,9 +3,12 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import json
 import os
 from uuid import uuid4
+from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 ARQUIVO_QUESTOES = 'questoes.json'
+ARQUIVO_CERTIFICADOS = 'certificados.json'
+ARQUIVO_USUARIOS = 'usuarios.json'
 
 ADMIN_USER = 'admin'
 ADMIN_PASS = 'admin123*'
@@ -15,7 +18,7 @@ def login():
     if request.method == 'POST':
         if request.form['usuario'] == ADMIN_USER and request.form['senha'] == ADMIN_PASS:
             session['admin'] = True
-            return redirect(url_for('admin.listar_questoes'))
+            return redirect(url_for('admin.dashboard'))
         else:
             return render_template('admin/admin_login.html', erro=True)
     return render_template('admin/admin_login.html')
@@ -34,11 +37,78 @@ def admin_required(f):
         return f(*args, **kwargs)
     return wrap
 
+@admin_bp.route('/')
+@admin_required
+def dashboard():
+    questoes = carregar_questoes()
+    certificados = carregar_certificados()
+    usuarios = carregar_usuarios()
+
+    # Métricas de questões
+    total_questoes = len(questoes)
+    por_nivel = {}
+    por_tipo = {}
+    for q in questoes:
+        nivel = (q.get('nivel') or '').upper()
+        tipo = q.get('tipo') or ''
+        if nivel:
+            por_nivel[nivel] = por_nivel.get(nivel, 0) + 1
+        if tipo:
+            por_tipo[tipo] = por_tipo.get(tipo, 0) + 1
+
+    # Métricas de certificados
+    total_certificados = len(certificados)
+    certificados_list = [{"codigo": cod, **dados} for cod, dados in certificados.items()]
+
+    def parse_data(s):
+        try:
+            return datetime.strptime(s, '%d/%m/%Y')
+        except Exception:
+            return datetime.min
+
+    certificados_recentes = sorted(certificados_list, key=lambda c: parse_data(c.get('data', '01/01/1970')), reverse=True)[:10]
+
+    # Métricas de usuários
+    total_usuarios = len(usuarios)
+    agora = datetime.now()
+    usuarios_validos = 0
+    for u in usuarios:
+        try:
+            validade = datetime.strptime(u.get('validade', '1970-01-01 00:00'), '%Y-%m-%d %H:%M')
+            if agora <= validade:
+                usuarios_validos += 1
+        except Exception:
+            pass
+
+    return render_template(
+        'admin/dashboard.html',
+        total_questoes=total_questoes,
+        por_nivel=por_nivel,
+        por_tipo=por_tipo,
+        total_certificados=total_certificados,
+        certificados_recentes=certificados_recentes,
+        total_usuarios=total_usuarios,
+        usuarios_validos=usuarios_validos,
+    )
+
 @admin_bp.route('/questoes')
 @admin_required
 def listar_questoes():
     questoes = carregar_questoes()
-    return render_template('admin/questoes.html', questoes=questoes)
+    grupos = {}
+    for q in questoes:
+        nivel = (q.get('nivel') or '').upper()
+        # Normaliza o tipo para evitar chaves diferentes por maiúsculas/variações
+        tipo = (q.get('tipo') or '').lower()
+        if not nivel:
+            continue
+        if nivel not in grupos:
+            grupos[nivel] = {}
+        if tipo not in grupos[nivel]:
+            grupos[nivel][tipo] = []
+        grupos[nivel][tipo].append(q)
+
+    return render_template('admin/questoes.html', questoes=questoes, grupos=grupos)
 
 @admin_bp.route('/questoes/nova', methods=['GET', 'POST'])
 @admin_required
@@ -117,3 +187,21 @@ def salvar_questoes(questoes):
             json.dump(questoes, f, indent=4, ensure_ascii=False)
     except Exception as e:
         print("❌ ERRO AO ESCREVER JSON:", e)
+
+def carregar_certificados():
+    if os.path.exists(ARQUIVO_CERTIFICADOS):
+        try:
+            with open(ARQUIVO_CERTIFICADOS, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def carregar_usuarios():
+    if os.path.exists(ARQUIVO_USUARIOS):
+        try:
+            with open(ARQUIVO_USUARIOS, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
